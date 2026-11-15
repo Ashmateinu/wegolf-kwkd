@@ -327,25 +327,22 @@ window.__sfxLog=window.__sfxLog||[];
 function b64(s){var bin=atob(s),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u.buffer}
 function init(){if(ctx||!AC)return ctx;try{ctx=new AC({latencyHint:"interactive"})}catch(e){ctx=new AC()}
   master=ctx.createGain();master.gain.value=on?1:0;master.connect(ctx.destination);
-  Object.keys(D).forEach(function(k){pending++;var done=function(b){buf[k]=b;pending--;flushQueued()},fail=function(){pending--;flushQueued()};
+  Object.keys(D).forEach(function(k){pending++;var done=function(b){buf[k]=b;pending--},fail=function(){pending--};
     try{var p=ctx.decodeAudioData(b64(D[k]),done,fail);if(p&&p.catch)p.catch(fail)}catch(e){fail()}});
   return ctx}
-function armResume(){if(!ctx||!ctx.resume)return;if(ctx.state==="interrupted"&&ctx.suspend){var p=ctx.suspend();if(p&&p.then)p.then(function(){setTimeout(function(){var r=ctx.resume();if(r&&r.then)r.then(flushQueued).catch(function(){})},200)});return}
-  var r=ctx.resume();if(r&&r.then)r.then(flushQueued).catch(function(){})}
+function armResume(){if(!ctx||!ctx.resume)return;if(ctx.state==="interrupted"&&ctx.suspend){var p=ctx.suspend();if(p&&p.then)p.then(function(){setTimeout(function(){ctx.resume()},200)});return}
+  ctx.resume()}
 function unlock(){init();if(!ctx)return;armResume();
   if(!unlocked){try{var s=ctx.createBufferSource();s.buffer=ctx.createBuffer(1,1,22050);s.connect(ctx.destination);s.start(0)}catch(e){}unlocked=true}}
 ["pointerdown","touchend","keydown","mousedown"].forEach(function(ev){document.addEventListener(ev,unlock,{capture:true,passive:true})});
-var queued=[];
 function startNow(name,opt){var b=buf[name];if(!b||!ctx||ctx.state!=="running")return null;
   var s=ctx.createBufferSource();s.buffer=b;var g=ctx.createGain();g.gain.value=opt.gain==null?1:opt.gain;s.connect(g);g.connect(master);
   try{s.start(ctx.currentTime+(opt.delay||0)/1000)}catch(e){return null}started++;return s}
-function flushQueued(){if(!ctx||ctx.state!=="running")return;var now=performance.now(),keep=[];
-  queued.forEach(function(item){if(now-item.at>500)return;if(!buf[item.name]){keep.push(item);return}startNow(item.name,item.opt)});queued=keep}
 function play(name,opt){opt=opt||{};
   window.__sfxLog.push({name:name,t:(typeof window.__vt==="number"?window.__vt:performance.now()),on:on,state:ctx?ctx.state:"none"});
   listeners.forEach(function(f){try{f(name)}catch(e){}});
   if(window.__SFX_REC||!on)return null;init();if(!ctx)return null;
-  if(ctx.state!=="running"||!buf[name]){queued.push({name:name,opt:opt,at:performance.now()});if(queued.length>8)queued=queued.slice(-8);armResume();return null}
+  if(ctx.state!=="running"||!buf[name]){if(ctx.state!=="running")armResume();return null}
   return startNow(name,opt)}
 document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&ctx)armResume()});
 function setOn(v){on=!!v;try{localStorage.setItem("wq_sfx_on",on?"1":"0")}catch(e){}
