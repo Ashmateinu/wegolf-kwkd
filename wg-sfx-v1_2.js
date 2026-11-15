@@ -19,15 +19,26 @@ function init(){if(ctx||!AC)return ctx;try{ctx=new AC({latencyHint:"interactive"
   Object.keys(D).forEach(function(k){pending++;var done=function(b){buf[k]=b;pending--},fail=function(){pending--};
     try{var p=ctx.decodeAudioData(b64(D[k]),done,fail);if(p&&p.catch)p.catch(fail)}catch(e){fail()}});
   return ctx}
-function unlock(){init();if(!ctx)return;if(ctx.state!=="running"&&ctx.resume)ctx.resume();
+function armResume(){if(!ctx||!ctx.resume)return;if(ctx.state==="interrupted"&&ctx.suspend){var p=ctx.suspend();if(p&&p.then)p.then(function(){setTimeout(function(){ctx.resume()},200)});return}
+  ctx.resume()}
+function unlock(){init();if(!ctx)return;armResume();
   if(!unlocked){try{var s=ctx.createBufferSource();s.buffer=ctx.createBuffer(1,1,22050);s.connect(ctx.destination);s.start(0)}catch(e){}unlocked=true}}
 ["pointerdown","touchend","keydown","mousedown"].forEach(function(ev){document.addEventListener(ev,unlock,{capture:true,passive:true})});
-function play(name,opt){opt=opt||{};
-  window.__sfxLog.push({name:name,t:(typeof window.__vt==="number"?window.__vt:performance.now()),on:on});
-  listeners.forEach(function(f){try{f(name)}catch(e){}});
-  if(window.__SFX_REC||!on)return null;init();var b=buf[name];if(!b||!ctx)return null;
+function startNow(name,opt){var b=buf[name];if(!b||!ctx||ctx.state!=="running")return null;
   var s=ctx.createBufferSource();s.buffer=b;var g=ctx.createGain();g.gain.value=opt.gain==null?1:opt.gain;s.connect(g);g.connect(master);
-  s.start(ctx.currentTime+(opt.delay||0)/1000);started++;return s}
+  try{s.start(ctx.currentTime+(opt.delay||0)/1000)}catch(e){return null}started++;return s}
+function play(name,opt){opt=opt||{};
+  var result="未播出";
+  if(window.__SFX_REC||!on)result=on?"录制":"关闭";
+  else{init();if(!ctx)result="无上下文";
+    else if(ctx.state!=="running"){armResume();result="未运行";}
+    else if(!buf[name])result="未解码";
+    else result=startNow(name,opt)?"已播出":"未能播出"}
+  var rec={name:name,t:(typeof window.__vt==="number"?window.__vt:performance.now()),on:on,state:ctx?ctx.state:"none",result:result};
+  window.__sfxLog.push(rec);window.__sfxLast=rec;
+  listeners.forEach(function(f){try{f(name)}catch(e){}});
+  return result==="已播出"?true:null}
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&ctx)armResume()});
 function setOn(v){on=!!v;try{localStorage.setItem("wq_sfx_on",on?"1":"0")}catch(e){}
   if(master&&ctx)master.gain.setTargetAtTime(on?1:0,ctx.currentTime,0.015);return on}
 window.WGSfx={init:init,unlock:unlock,play:play,setOn:setOn,isOn:function(){return on},meta:META,
