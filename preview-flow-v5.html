@@ -161,11 +161,10 @@ html.h-s .kicker{display:none} html.h-s h1{margin-top:0} html.h-s .mid{padding:1
 .sub .n{color:var(--ink-2)}
 /* v3.2 · t331u/t332u：题干、选项各降一档（只用结果页字级阶梯 12/16 · 15/24 · 20/28 · 32/40，行高都在 4px 基线上）；题干字重仍 600
    题干 20/28 → 15/24（紧凑档 15/24 → 12/16）；选项 15/24 → 12/16（字母列同步）；解析段 15/24 不变 */
-/* 手机可读性：沿既有阶梯各升一档。题干 15/24 → 20/28；短屏 h-s 12/16 → 13/20。选项 12/16 → 13/20。内容超出仍可滚动，dense 不再把题干缩回小档 */
+/* 手机阅读用阶梯里的正文档，不再停在 12/13。题干 20/28、选项 15/24；短屏和 dense 不因高度把题干或选项缩回小字，放不下就整页滚动 */
 .qz{--qz-stem-t:var(--t-title);--qz-stem-l:var(--l-title)}
-html.h-s .qz{--qz-stem-t:13px;--qz-stem-l:20px}
-.wg-opt{font-size:13px;line-height:20px}
-.wg-opt .k{font:600 13px/20px var(--num)}
+.wg-opt{font-size:var(--t-body);line-height:var(--l-body)}
+.wg-opt .k{font:600 var(--t-body)/var(--l-body) var(--num)}
 /* v3.2 · t333u：答题 / 解析顶栏去掉「离 GBTI 还差 X 分 / 已达 GBTI 门槛」（只留在晋级页、结果页）；积分单行 12/16 居中 → 行顶 20、基线 33（56 高顶栏），右缘离图标视觉一个栏距 16 */
 .top .gap{display:none}
 /* v3.4：13/20 为阶梯一档（行高 20 落 4px 基线）。解析段原 13/20，升一档为 15/24（与 --t-body 同档） */
