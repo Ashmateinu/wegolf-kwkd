@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>海报旁文字 · 三方向初稿 · 待选择</title>
+<style>
+@font-face{font-family:"WG Sans";font-weight:400;src:url(assets/wg-sans-400.woff2) format("woff2")}
+@font-face{font-family:"WG Sans";font-weight:700;src:url(assets/wg-sans-700.woff2) format("woff2")}
+@font-face{font-family:"WG Num";font-weight:600;src:url(assets/wg-num-600.woff2) format("woff2")}
+:root{
+  --m:24px; --g:16px; --skew:-9.73deg;
+  --ink:#040000; --ink-2:#4A4743; --ink-3:#7A766F; --hair:#E6E3DD;
+  --canvas:#F4F3F0; --card:#fff; --orange:#EB521A; --green:#053331;
+  --zh:"WG Sans","Noto Sans CJK SC","PingFang SC",sans-serif;
+  --num:"WG Num","Barlow Condensed","WG Sans",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#e7e4df;color:var(--ink);font:400 15px/24px var(--zh)}
+.tool{max-width:1240px;margin:0 auto;padding:24px}
+.tool h1{font:700 32px/40px var(--zh);margin:0 0 8px}
+.tool .lead{margin:0 0 16px;max-width:720px}
+.tool nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.tool button{height:40px;padding:0 16px;border:1px solid var(--hair);background:var(--card);border-radius:12px;font:700 15px/24px var(--zh);cursor:pointer}
+.tool button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.thumbs{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-bottom:32px}
+.thumb{background:var(--card);border-radius:12px;overflow:hidden}
+.thumb p{margin:0;padding:8px 8px 12px;font:700 12px/16px var(--zh)}
+.thumb .scale{width:160px;height:220px;overflow:hidden}
+.thumb .scale .phone{transform:scale(.427);transform-origin:0 0}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
+.board h2{font:700 20px/28px var(--zh);margin:0 0 8px}
+.board .why{min-height:96px;margin:0 0 12px;color:var(--ink-2)}
+.phone{width:var(--pw);height:var(--ph);overflow:auto;background:var(--canvas);border-radius:28px;box-shadow:0 8px 28px rgba(4,0,0,.12)}
+.top{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 16px;background:rgba(244,243,240,.92)}
+.logo{height:28px;width:auto;display:block}
+.pts{font:400 15px/24px var(--zh)}
+.n{font-family:var(--num);font-weight:600;display:inline-block;transform:skewX(var(--skew));font-size:inherit;line-height:inherit}
+.sheet{padding:16px var(--m) 24px}
+.cheer{margin:0 0 16px;font:700 20px/28px var(--zh)}
+.card{background:var(--card);border-radius:20px;padding:16px}
+.frame{background:#fff;padding:5px;border-radius:14px 3px 14px 3px;box-shadow:0 2px 6px rgba(4,0,0,.10),0 8px 20px rgba(4,0,0,.08)}
+.frame img{display:block;width:100%;height:auto}
+.kicker{margin:0;font:700 12px/16px var(--zh);letter-spacing:.04em}
+.kicker.claim{color:var(--orange)}
+.kicker.locked{color:var(--ink-3)}
+.kicker.claimed{color:var(--green)}
+.flag{margin:4px 0 0;font:700 12px/16px var(--zh);color:var(--orange)}
+.title{margin:8px 0 0;font:700 20px/28px var(--zh)}
+.title .ln{display:block}
+.sub{margin:4px 0 0;font:400 15px/24px var(--zh);color:var(--ink-2)}
+.note{margin:4px 0 0;font:400 15px/24px var(--zh)}
+.we-btn{position:relative;isolation:isolate;display:flex;width:100%;min-height:56px;align-items:center;justify-content:center;margin-top:16px;padding:16px 24px;border:0;background:none;color:#fff;font:700 16px/24px var(--zh);cursor:pointer;text-align:center}
+.we-btn::before{content:"";position:absolute;inset:0 5px;z-index:-1;background:var(--orange);border-radius:14px 3px 14px 3px;transform:skewX(var(--skew))}
+.dir-b .title{font:700 32px/40px var(--zh)}
+.dir-a .copy{margin-top:16px}
+.dir-a .sub{margin-top:8px}
+.dir-b .poster{margin-top:16px}
+.dir-c .split{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;align-items:start}
+.phone[data-w="320"] .dir-c .split{display:block}
+.phone[data-w="320"] .dir-c .poster{margin-top:16px}
+.keep{margin-top:8px;font:400 12px/16px var(--zh);color:var(--ink-3)}
+</style>
+</head>
+<body>
+<main class="tool" id="tool">
+  <h1>海报旁文字 · 三方向初稿</h1>
+  <p class="lead">待选择，不是已批准方案。海报用现稿，不裁切、不盖字。字号只用 12/16、15/24、20/28、32/40。正式页、字号稿、按钮稿和音效稿都没有接这页。</p>
+  <nav>
+    <button type="button" data-lang="zh" aria-pressed="true">中文</button>
+    <button type="button" data-lang="en" aria-pressed="false">English</button>
+    <button type="button" data-state="locked" aria-pressed="false">未解锁</button>
+    <button type="button" data-state="claim" aria-pressed="true">可领取</button>
+    <button type="button" data-state="claimed" aria-pressed="false">已领取</button>
+  </nav>
+  <section class="thumbs" id="thumbs"></section>
+  <section class="board" id="board"></section>
+</main>
+<script>
+var LANG="zh", STATE="claim", SIZE="375";
+var SIZES={"320":[320,568],"375":[375,812],"667":[375,667],"414":[414,896]};
+var COPY={
+  zh:{
+    unit:"积分",
+    locked:"36 分解锁",
+    claim:"已解锁",
+    claimed:"已领取",
+    noteClaimed:"赠品保留",
+    lines:["高尔夫小白","避坑指南"],
+    flag:"",
+    sub:"轻松走进高尔夫",
+    btn:"领取高尔夫小白避坑指南",
+    cheer:{locked:"就差 8 分！",claim:"高尔夫小白避坑指南到手！",claimed:"高尔夫小白避坑指南还在你手里"},
+    score:{locked:"28",claim:"52",claimed:"52"}
+  },
+  en:{
+    unit:"points",
+    locked:"Unlocks at 36 points",
+    claim:"Unlocked",
+    claimed:"Claimed",
+    noteClaimed:"gift kept",
+    lines:["Golf Beginner's Guide"],
+    flag:"Beginner's Guide",
+    sub:"Ease into golf",
+    btn:"Claim Golf Beginner's Guide",
+    cheer:{locked:"Unlocks at 36 points",claim:"Golf Beginner's Guide is yours!",claimed:"Claimed, gift kept"},
+    score:{locked:"28",claim:"52",claimed:"52"}
+  }
+};
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})}
+function titleHTML(c){
+  if(LANG==="zh") return c.lines.map(function(l){return '<span class="ln">'+esc(l)+'</span>'}).join("");
+  return esc(c.lines[0]);
+}
+function gift(dir){
+  var c=COPY[LANG], k=STATE;
+  var poster='<div class="poster"><div class="frame"><img src="assets/xiaoxueseng.jpg" alt=""></div></div>';
+  var extra=k==="claimed"?'<p class="note">'+esc(c.noteClaimed)+'</p>':"";
+  var copy;
+  if(dir==="a"){
+    copy='<div class="copy"><p class="kicker '+k+'">'+esc(c[k])+'</p><p class="sub">'+esc(c.sub)+'</p>'+extra+'</div>';
+  }else{
+    var flag=c.flag?'<p class="flag">'+esc(c.flag)+'</p>':"";
+    var sub=(k==="locked")?"":'<p class="sub">'+esc(c.sub)+'</p>';
+    copy='<div class="copy"><p class="kicker '+k+'">'+esc(c[k])+'</p>'+flag+'<h2 class="title">'+titleHTML(c)+'</h2>'+sub+extra+'</div>';
+  }
+  var inner=dir==="a"?poster+copy:dir==="b"?copy+poster:'<div class="split">'+copy+poster+'</div>';
+  var btn=k==="claim"?'<button class="we-btn" type="button">'+esc(c.btn)+'</button>':"";
+  return '<div class="card dir-'+dir+'">'+inner+'</div>'+btn;
+}
+function phone(dir,w){
+  var c=COPY[LANG], dim=SIZES[w];
+  var cheer=dir==="a"?"":'<p class="cheer">'+esc(c.cheer[STATE])+'</p>';
+  return '<article class="phone" data-w="'+w+'" style="--pw:'+dim[0]+'px;--ph:'+dim[1]+'px">'+
+    '<header class="top"><img class="logo" src="assets/logo.svg" alt="WEGOLF"><span class="pts"><b class="n">'+c.score[STATE]+'</b> '+esc(c.unit)+'</span></header>'+
+    '<div class="sheet">'+cheer+gift(dir)+'</div></article>';
+}
+var THUMBS=[
+  ["a","1 海报在上","选为甲"],
+  ["b","2 文案在上","选为乙"],
+  ["side","3 海报在左","不选，接近现况"],
+  ["c","4 文案在左","宽屏并入丙"],
+  ["band","5 名称整宽","保留备选"],
+  ["c","6 窄屏文案在上","选为丙"]
+];
+function paint(){
+  document.querySelectorAll(".tool nav button").forEach(function(b){
+    var on=(b.dataset.lang&&b.dataset.lang===LANG)||(b.dataset.state&&b.dataset.state===STATE);
+    b.setAttribute("aria-pressed", on?"true":"false");
+  });
+  document.getElementById("thumbs").innerHTML=THUMBS.map(function(t,i){
+    var w=i===5?"320":"375";
+    var dir=t[0]==="side"?"side":t[0]==="band"?"band":t[0];
+    return '<figure class="thumb"><div class="scale">'+phone(dir==="side"?"side":dir==="band"?"band":t[0], w)+'</div><p>'+t[1]+'</p><p class="keep">'+t[2]+'</p></figure>';
+  }).join("");
+  document.getElementById("board").innerHTML=[
+    ["a","甲 · 海报在上","已选。海报原图不动。海报外去掉重复名称，只留「轻松走进高尔夫」／Ease into golf。已解锁、已领取和领取按钮仍在。"],
+    ["b","乙 · 文案在上","先读名称，海报在下，仍是完整比例。标题用现有 32/40。已领取时，状态在画面最上，不靠海报旁边的窄列。"],
+    ["c","丙 · 宽屏并排，320 改为文案在上","375 和 414 文案在左、海报在右，顶对齐。320 并排会挤英文，改成文案在上、海报在下。字号不降。"]
+  ].map(function(d){
+    return '<section><h2>'+d[1]+'</h2><p class="why">'+d[2]+'</p>'+phone(d[0], SIZE)+'</section>';
+  }).join("");
+}
+document.querySelector(".tool nav").addEventListener("click",function(e){
+  var b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.lang) LANG=b.dataset.lang;
+  if(b.dataset.state) STATE=b.dataset.state;
+  paint();
+});
+var q=new URLSearchParams(location.search);
+if(q.get("lang")) LANG=q.get("lang");
+if(q.get("state")) STATE=q.get("state");
+if(q.get("size")) SIZE=q.get("size");
+paint();
+if(q.get("only")){
+  document.querySelector(".tool h1").hidden=true;
+  document.querySelector(".lead").hidden=true;
+  document.querySelector(".tool nav").hidden=true;
+  if(q.get("only")==="thumbs") document.getElementById("board").hidden=true;
+  else document.getElementById("thumbs").hidden=true;
+  if(q.get("dir")){
+    document.querySelectorAll("#board section").forEach(function(s,i){
+      var id=["a","b","c"][i];
+      s.hidden=id!==q.get("dir");
+    });
+  }
+}
+</script>
+<style>
+.dir-side .split{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;align-items:start}
+.dir-side .poster{order:-1}
+.dir-band .split{display:block}
+.dir-band .poster{margin-top:16px}
+.phone[data-w="320"] .dir-side .split{display:block}
+.phone[data-w="320"] .dir-side .poster{order:0;margin-top:16px}
+.thumb .scale{width:168px;height:248px}
+.thumb .scale .phone{transform:scale(.448);transform-origin:0 0}
+</style>
+</body>
+</html>
