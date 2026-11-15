@@ -581,7 +581,7 @@ function render(t){
   /* 拍 ①（0–1.4s）：鼓励语 + 分数 0→78 + 彩带 */
   var a=seg(t,0,500);$("cheer").style.cssText="opacity:"+a+";transform:translateY("+(1-ease(a))*12+"px) scale("+(0.92+0.08*back(a))+")";
   var a2=seg(t,250,750);$("cheer2").style.opacity=a2;
-  $("num").textContent=Math.round((S.score||78)*ease(seg(t,150,1400)));
+  $("num").textContent=Math.round((S.score==null?78:S.score)*ease(seg(t,150,1400)));
   var pop=seg(t,1400,1650);$("num").style.transform="scale("+(1+0.12*Math.sin(pop*Math.PI))+")";
   $("rays").style.cssText="opacity:"+(S.fx===false?0:Math.min(1,seg(t,100,700)))+";transform:rotate("+(t/1000*8)+"deg) scale("+(0.6+0.4*ease(seg(t,100,900)))+")";
   $("acc").style.opacity=seg(t,900,1300);

@@ -544,9 +544,14 @@ function fillRetake(){var r=retakeInfo(),used=S.retakesUsed;
   $("sh-act").hidden=!r.ok;$("sh-go").textContent=T("rtGo")}
 function openRetake(){sheetId="retake";fillRetake();$("mask").classList.add("on");$("sheet").classList.add("on");d.setAttribute("data-sheet","retake")}
 function doRetake(){var r=retakeInfo();if(!r.ok)return false;
-  S.total=r.after;S.retakesUsed++;S.games=0;S.stage=1;
-  S.rounds=[];try{if(key==="live"){if(window.WGStore)WGStore.doRetake();else{localStorage.setItem("wq_pts",String(S.total));localStorage.setItem("wq_retakes_used",String(S.retakesUsed));localStorage.setItem("wq_stage_v44","1")}}}catch(e){}   /* v5：同 v41，重开清空本轮 3 局记录 */
-  closeSheet();paint();$("num").textContent=S.total;toast(T("tRestarted"));return true}
+  var saved=key!=="live";
+  try{if(key==="live"){if(window.WGStore)saved=!!WGStore.doRetake();else{localStorage.setItem("wq_pts",String(r.after));localStorage.setItem("wq_retakes_used",String(S.retakesUsed+1));localStorage.setItem("wq_stage_v44","1");var h=JSON.parse(localStorage.getItem("wq_hist_v1")||"{}");if(!h||typeof h!=="object"||Array.isArray(h))h={};h.sessions=[];localStorage.setItem("wq_hist_v1",JSON.stringify(h));saved=true}}}catch(e){saved=false}
+  if(!saved)return false;   /* 存储没写成时不假装已重开，次数/扣分/已见题/错题/已领赠品都不动 */
+  S.total=r.after;S.retakesUsed++;S.games=0;S.stage=1;S.rounds=[];
+  try{sessionStorage.setItem("wq_run_v1",JSON.stringify({pts:S.total,round:1,stage:1,correct:0,roundPts:0,acc:"0/18",promoted:false,lang:LANG==="en"?"en":"zh"}))}catch(e){}
+  closeSheet();paint();$("num").textContent=S.total;toast(T("tRestarted"));
+  var st=$("btn-start");if(st&&st.scrollIntoView)st.scrollIntoView({block:"center"});
+  return true}
 window.__retake=doRetake;window.__retakeInfo=retakeInfo;
 $("sh-go").addEventListener("click",function(){if(sheetId==="retake")doRetake()});
 $("m-retake").addEventListener("click",openRetake);
