@@ -53,7 +53,9 @@ body{margin:0;background:#e7e4df;color:var(--ink);font:400 15px/24px var(--zh)}
 .we-btn{position:relative;isolation:isolate;display:flex;width:100%;min-height:56px;align-items:center;justify-content:center;margin-top:16px;padding:16px 24px;border:0;background:none;color:#fff;font:700 16px/24px var(--zh);cursor:pointer;text-align:center}
 .we-btn::before{content:"";position:absolute;inset:0 5px;z-index:-1;background:var(--orange);border-radius:14px 3px 14px 3px;transform:skewX(var(--skew))}
 .dir-b .title{font:700 32px/40px var(--zh)}
-.dir-a .copy,.dir-b .poster{margin-top:16px}
+.dir-a .copy{margin-top:16px}
+.dir-a .sub{margin-top:8px}
+.dir-b .poster{margin-top:16px}
 .dir-c .split{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;align-items:start}
 .phone[data-w="320"] .dir-c .split{display:block}
 .phone[data-w="320"] .dir-c .poster{margin-top:16px}
@@ -112,20 +114,26 @@ function titleHTML(c){
 }
 function gift(dir){
   var c=COPY[LANG], k=STATE;
-  var flag=c.flag?'<p class="flag">'+esc(c.flag)+'</p>':"";
-  var sub=(k==="locked")?"":'<p class="sub">'+esc(c.sub)+'</p>';
-  var extra=k==="claimed"?'<p class="note">'+esc(c.noteClaimed)+'</p>':"";
-  var copy='<div class="copy"><p class="kicker '+k+'">'+esc(c[k])+'</p>'+flag+'<h2 class="title">'+titleHTML(c)+'</h2>'+sub+extra+'</div>';
   var poster='<div class="poster"><div class="frame"><img src="assets/xiaoxueseng.jpg" alt=""></div></div>';
+  var extra=k==="claimed"?'<p class="note">'+esc(c.noteClaimed)+'</p>':"";
+  var copy;
+  if(dir==="a"){
+    copy='<div class="copy"><p class="kicker '+k+'">'+esc(c[k])+'</p><p class="sub">'+esc(c.sub)+'</p>'+extra+'</div>';
+  }else{
+    var flag=c.flag?'<p class="flag">'+esc(c.flag)+'</p>':"";
+    var sub=(k==="locked")?"":'<p class="sub">'+esc(c.sub)+'</p>';
+    copy='<div class="copy"><p class="kicker '+k+'">'+esc(c[k])+'</p>'+flag+'<h2 class="title">'+titleHTML(c)+'</h2>'+sub+extra+'</div>';
+  }
   var inner=dir==="a"?poster+copy:dir==="b"?copy+poster:'<div class="split">'+copy+poster+'</div>';
   var btn=k==="claim"?'<button class="we-btn" type="button">'+esc(c.btn)+'</button>':"";
   return '<div class="card dir-'+dir+'">'+inner+'</div>'+btn;
 }
 function phone(dir,w){
   var c=COPY[LANG], dim=SIZES[w];
+  var cheer=dir==="a"?"":'<p class="cheer">'+esc(c.cheer[STATE])+'</p>';
   return '<article class="phone" data-w="'+w+'" style="--pw:'+dim[0]+'px;--ph:'+dim[1]+'px">'+
     '<header class="top"><img class="logo" src="assets/logo.svg" alt="WEGOLF"><span class="pts"><b class="n">'+c.score[STATE]+'</b> '+esc(c.unit)+'</span></header>'+
-    '<div class="sheet"><p class="cheer">'+esc(c.cheer[STATE])+'</p>'+gift(dir)+'</div></article>';
+    '<div class="sheet">'+cheer+gift(dir)+'</div></article>';
 }
 var THUMBS=[
   ["a","1 海报在上","选为甲"],
@@ -146,7 +154,7 @@ function paint(){
     return '<figure class="thumb"><div class="scale">'+phone(dir==="side"?"side":dir==="band"?"band":t[0], w)+'</div><p>'+t[1]+'</p><p class="keep">'+t[2]+'</p></figure>';
   }).join("");
   document.getElementById("board").innerHTML=[
-    ["a","甲 · 海报在上","名称让出整行。中文按「高尔夫小白 / 避坑指南」断开。英文全名 20/28 自行换行，旗帜短名 Beginner's Guide 在标题上。窄屏整页可滚动，不缩小字。"],
+    ["a","甲 · 海报在上","已选。海报原图不动。海报外去掉重复名称，只留「轻松走进高尔夫」／Ease into golf。已解锁、已领取和领取按钮仍在。"],
     ["b","乙 · 文案在上","先读名称，海报在下，仍是完整比例。标题用现有 32/40。已领取时，状态在画面最上，不靠海报旁边的窄列。"],
     ["c","丙 · 宽屏并排，320 改为文案在上","375 和 414 文案在左、海报在右，顶对齐。320 并排会挤英文，改成文案在上、海报在下。字号不降。"]
   ].map(function(d){
