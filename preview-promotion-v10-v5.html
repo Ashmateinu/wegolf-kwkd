@@ -33,7 +33,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webki
 .icbtn:active{background:rgba(4,0,0,.06)}
 #fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:15}
 .scr{min-height:100vh;min-height:100svh;min-height:100dvh;padding-top:calc(56px + var(--sat));padding-bottom:var(--sab);display:flex;flex-direction:column}
-.stage{position:relative;padding-top:16px;flex:1;display:flex;flex-direction:column;padding-bottom:0}
+/* 主按钮底留白与结果页 .scr1 .stage 同一档：默认 48，h-m / 高度≤740 为 40，h-s / 高度≤600 为 36 */
+.stage{position:relative;padding-top:16px;flex:1;display:flex;flex-direction:column;padding-bottom:48px}
 .kicker{font-size:var(--t-cap);line-height:var(--l-cap);color:var(--ink-3);letter-spacing:.02em}
 .cheer{font-size:var(--t-head);line-height:var(--l-head);font-weight:700;letter-spacing:-.01em;margin-top:8px;transform-origin:0 50%}
 .cheer2{font-size:var(--t-body);line-height:var(--l-body);color:var(--ink-2);margin-top:4px}
@@ -113,7 +114,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webki
  .tier{margin-top:32px}
  .cta{padding-top:16px} .status{margin-top:16px}
  .poster{grid-template-columns:calc(var(--col) + var(--g)) 1fr;padding:12px}
- .stage{padding-bottom:16px}
+ .stage{padding-bottom:40px}
 }
 @media (max-height:600px){
  .kicker{display:none} .cheer{margin-top:0}
@@ -121,7 +122,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webki
  .score{margin-top:8px} .tier{margin-top:16px} .cta{padding-top:0} .status{margin-top:8px}
  .poster{grid-template-columns:calc(var(--col)) 1fr;padding:12px}
  .poster .act{display:none}
- .slogan{padding:16px 0 16px} .stage{padding-bottom:0}
+ .slogan{padding:16px 0 16px} .stage{padding-bottom:36px}
 }
 html.h-m .cheer{font-size:28px;line-height:36px}
 html.h-m .score{margin-top:16px;height:88px}
@@ -130,7 +131,7 @@ html.h-m .tier{margin-top:32px}
 html.h-m .cta{padding-top:16px}
 html.h-m .status{margin-top:16px}
 html.h-m .poster{grid-template-columns:calc(var(--col) + var(--g)) 1fr;padding:12px}
-html.h-m .stage{padding-bottom:16px}
+html.h-m .stage{padding-bottom:40px}
 html.h-s .kicker{display:none}
 html.h-s .cheer{margin-top:0}
 html.h-s .score{height:76px}
@@ -142,7 +143,7 @@ html.h-s .status{margin-top:8px}
 html.h-s .poster{grid-template-columns:calc(var(--col)) 1fr;padding:12px}
 html.h-s .poster .act{display:none}
 html.h-s .slogan{padding:16px 0 16px}
-html.h-s .stage{padding-bottom:0}
+html.h-s .stage{padding-bottom:36px}
 html.lang-en.h-s .cheer{font-size:var(--t-title);line-height:var(--l-title)}
 html.lang-en.h-s .poster{padding:8px}
 
