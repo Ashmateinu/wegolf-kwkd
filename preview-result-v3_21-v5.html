@@ -623,7 +623,9 @@ else if(reduce){finish();}
 else if(rec){render(0);}
 else if(/[?&]poster=1/.test(location.search) && S.f99){finish();}
 else{render(0);$("skip").hidden=false;
-  var loop=function(ts){if(start===null)start=ts;var t=ts-start;render(t);if(t<Math.max(DUR+2600,S.f99?((window.WGGbti&&WGGbti.END)||4600)+POPIN+POSTER_HOLD+400:0))raf=requestAnimationFrame(loop);else finish()};raf=requestAnimationFrame(loop);
+  var elapsed=0,lastTs=null;
+  var loop=function(ts){if(document.visibilityState!=="visible"){lastTs=null;raf=requestAnimationFrame(loop);return}
+    if(lastTs===null)lastTs=ts;var gap=ts-lastTs;lastTs=ts;if(gap>0)elapsed+=Math.min(gap,50);var t=elapsed;render(t);if(t<Math.max(DUR+2600,S.f99?((window.WGGbti&&WGGbti.END)||4600)+POPIN+POSTER_HOLD+400:0))raf=requestAnimationFrame(loop);else finish()};raf=requestAnimationFrame(loop);
   var sk=function(){window.__skipPoster=true;if(window.WGPoster)WGPoster.close(true);finish();removeEventListener("pointerdown",sk,true)};
   addEventListener("pointerdown",sk,true);}
 if(S.f99&&$("pcard")&&window.WGPoster){WGPoster.bind($("pcard"),function(){var i=$("pcard").querySelector("img");return i?{src:i.src,alt:i.alt}:null});}

@@ -506,7 +506,10 @@ if(reduce){diagWhy="减少动态";finish()}
 else if(final){diagWhy="地址要求定格";finish()}
 else if(rec){render(0)}
 else{render(0);$("skip").hidden=false;
-  var loop=function(ts){if(start===null){start=ts;diagVis1=document.visibilityState;diagTFirst=Math.round(performance.now()-diagBoot)}diagFrames++;var t=ts-start;render(t);if(t<DUR+400)raf=requestAnimationFrame(loop);else{diagWhy="时间轴播完";finish()}};
+  var elapsed=0,lastTs=null;
+  var loop=function(ts){if(document.visibilityState!=="visible"){lastTs=null;raf=requestAnimationFrame(loop);return}
+    if(!diagTFirst){diagVis1=document.visibilityState;diagTFirst=Math.round(performance.now()-diagBoot)}
+    if(lastTs===null)lastTs=ts;var gap=ts-lastTs;lastTs=ts;if(gap>0)elapsed+=Math.min(gap,50);diagFrames++;var t=elapsed;render(t);if(t<DUR+400)raf=requestAnimationFrame(loop);else{diagWhy="时间轴播完";finish()}};
   raf=requestAnimationFrame(loop);
   var sk=function(e){diagWhy="点按跳过";diagTouch=(e&&e.isTrusted?"可信":"非可信")+"，第 "+Math.round(performance.now()-diagBoot)+" 毫秒";finish();removeEventListener("pointerdown",sk,true)};
   addEventListener("pointerdown",sk,true);}
