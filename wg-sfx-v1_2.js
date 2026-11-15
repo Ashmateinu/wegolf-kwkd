@@ -28,11 +28,16 @@ function startNow(name,opt){var b=buf[name];if(!b||!ctx||ctx.state!=="running")r
   var s=ctx.createBufferSource();s.buffer=b;var g=ctx.createGain();g.gain.value=opt.gain==null?1:opt.gain;s.connect(g);g.connect(master);
   try{s.start(ctx.currentTime+(opt.delay||0)/1000)}catch(e){return null}started++;return s}
 function play(name,opt){opt=opt||{};
-  window.__sfxLog.push({name:name,t:(typeof window.__vt==="number"?window.__vt:performance.now()),on:on,state:ctx?ctx.state:"none"});
+  var result="未播出";
+  if(window.__SFX_REC||!on)result=on?"录制":"关闭";
+  else{init();if(!ctx)result="无上下文";
+    else if(ctx.state!=="running"){armResume();result="未运行";}
+    else if(!buf[name])result="未解码";
+    else result=startNow(name,opt)?"已播出":"未能播出"}
+  var rec={name:name,t:(typeof window.__vt==="number"?window.__vt:performance.now()),on:on,state:ctx?ctx.state:"none",result:result};
+  window.__sfxLog.push(rec);window.__sfxLast=rec;
   listeners.forEach(function(f){try{f(name)}catch(e){}});
-  if(window.__SFX_REC||!on)return null;init();if(!ctx)return null;
-  if(ctx.state!=="running"||!buf[name]){if(ctx.state!=="running")armResume();return null}
-  return startNow(name,opt)}
+  return result==="已播出"?true:null}
 document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&ctx)armResume()});
 function setOn(v){on=!!v;try{localStorage.setItem("wq_sfx_on",on?"1":"0")}catch(e){}
   if(master&&ctx)master.gain.setTargetAtTime(on?1:0,ctx.currentTime,0.015);return on}

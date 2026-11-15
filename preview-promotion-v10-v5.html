@@ -500,7 +500,8 @@ var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches,rec=/[?&]rec=1
 var DIAG=/[?&]diag=1(?:&|$)/.test(P),diagBoot=performance.now(),diagVis0=document.visibilityState,diagWhy="",diagTouch="无",diagFrames=0,diagVis1="",diagTFirst=0;
 function diagVis(v){return v==="hidden"?"隐藏":v==="prerender"?"预渲染":"可见"}
 function diagPaint(){if(!DIAG)return;var el=document.getElementById("wg-diag");if(!el){el=document.createElement("pre");el.id="wg-diag";el.setAttribute("role","status");el.style.cssText="position:fixed;left:16px;right:16px;top:64px;z-index:90;margin:0;padding:12px 16px;background:#fff;color:#040000;border:1px solid #E6E3DD;border-radius:12px;font:400 15px/24px "+getComputedStyle(document.body).fontFamily+";white-space:pre-wrap;pointer-events:none";document.body.appendChild(el)}
-  el.textContent=["动效诊断","结束原因："+(diagWhy||"尚未结束"),"减少动态："+(reduce?"是":"否"),"地址定格："+(final?"是":"否"),"打开时页面："+diagVis(diagVis0),"第一帧时页面："+(diagVis1?diagVis(diagVis1):"未到"),"动画帧数："+diagFrames,"第一帧："+(diagTFirst?diagTFirst+" 毫秒":"未到"),"结束："+(diagWhy?Math.round(performance.now()-diagBoot)+" 毫秒":"未结束"),"点按："+diagTouch].join("\n")}
+  var audio="无";if(window.WGSfx){var st=WGSfx.status(),last=window.__sfxLast;audio=st.state+(last?"，最近 "+last.name+" / "+last.result:"")}
+  el.textContent=["动效诊断","结束原因："+(diagWhy||"尚未结束"),"减少动态："+(reduce?"是":"否"),"地址定格："+(final?"是":"否"),"打开时页面："+diagVis(diagVis0),"第一帧时页面："+(diagVis1?diagVis(diagVis1):"未到"),"动画帧数："+diagFrames,"第一帧："+(diagTFirst?diagTFirst+" 毫秒":"未到"),"结束："+(diagWhy?Math.round(performance.now()-diagBoot)+" 毫秒":"未结束"),"点按："+diagTouch,"音频："+audio].join("\n")}
 function finish(){cancelAnimationFrame(raf);if(DIAG&&diagWhy)diagPaint();window.__finish()}
 if(reduce){diagWhy="减少动态";finish()}
 else if(final){diagWhy="地址要求定格";finish()}
@@ -509,7 +510,7 @@ else{render(0);$("skip").hidden=false;
   var elapsed=0,lastTs=null;
   var loop=function(ts){if(document.visibilityState!=="visible"){lastTs=null;raf=requestAnimationFrame(loop);return}
     if(!diagTFirst){diagVis1=document.visibilityState;diagTFirst=Math.round(performance.now()-diagBoot)}
-    if(lastTs===null)lastTs=ts;var gap=ts-lastTs;lastTs=ts;if(gap>0)elapsed+=Math.min(gap,50);diagFrames++;var t=elapsed;render(t);if(t<DUR+400)raf=requestAnimationFrame(loop);else{diagWhy="时间轴播完";finish()}};
+    if(lastTs===null)lastTs=ts;var gap=ts-lastTs;lastTs=ts;if(gap>0)elapsed+=Math.min(gap,100);diagFrames++;var t=elapsed;render(t);if(t<DUR+400)raf=requestAnimationFrame(loop);else{diagWhy="时间轴播完";finish()}};
   raf=requestAnimationFrame(loop);
   var sk=function(e){diagWhy="点按跳过";diagTouch=(e&&e.isTrusted?"可信":"非可信")+"，第 "+Math.round(performance.now()-diagBoot)+" 毫秒";finish();removeEventListener("pointerdown",sk,true)};
   addEventListener("pointerdown",sk,true);}
